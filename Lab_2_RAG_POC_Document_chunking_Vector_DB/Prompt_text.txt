@@ -1,0 +1,4 @@
+I want to do a PoC on RAG for learning purpose.
+First I want a python code which would convert a given pdf to markdown file by using dockling
+store the output in a markdown folder inside the source folder
+find the sample pdf in source\pdf\RAG demo.pdf
