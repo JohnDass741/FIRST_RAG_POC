@@ -1,34 +1,16 @@
-"""Ask Ollama Cloud a question using the key in config.json."""
+"""Ask the local Ollama model a question."""
 
 import json
-from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 
-API_URL = "https://ollama.com/api/chat"
-MODEL = "gpt-oss:20b-cloud"
-CONFIG_FILE = Path(__file__).with_name("config.json")
+API_URL = "http://localhost:11434/api/chat"
+MODEL = "llama3.2:3b"
 
 
 def main():
-    # Read the API key from the local config file.
-    try:
-        with CONFIG_FILE.open("r", encoding="utf-8") as file:
-            config = json.load(file)
-    except FileNotFoundError:
-        print('config.json was not found. Create it with: {"OLLAMA_API_KEY": "your_api_key"}')
-        return
-    except json.JSONDecodeError:
-        print("config.json is not valid JSON. Check its braces, quotes, and commas.")
-        return
-
-    api_key = config.get("OLLAMA_API_KEY", "").strip()
-    if not api_key or api_key == "your_api_key":
-        print('Add your Ollama API key to config.json under "OLLAMA_API_KEY".')
-        return
-
-    question = input("Ask gpt-oss-20b a question: ").strip()
+    question = input(f"Ask {MODEL} a question: ").strip()
     if not question:
         print("Please enter a question.")
         return
@@ -43,7 +25,6 @@ def main():
         API_URL,
         data=json.dumps(request_data).encode("utf-8"),
         headers={
-            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         },
         method="POST",
